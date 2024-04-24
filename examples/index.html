@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <title>Handy SDK v2 example</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Handy state example</h1>
+      <div class="row row-cols-lg-auto gx-2 my-2">
+        <div class="col-12">
+          <input
+            class="form-control"
+            id="connection-key"
+            placeholder="Connection key"
+          />
+        </div>
+        <div class="col-12">
+          <button class="btn btn-success" onclick="connect()">Connect</button>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-danger" onclick="disconnect()">
+            Disconnect
+          </button>
+        </div>
+      </div>
+
+      <p id="handy-message-output"></p>
+      <h4>Trigger status updates</h4>
+      <h5>Dynamic</h5>
+      <button class="btn btn-primary" onclick="getStoredKey()">
+        Get Stored Key
+      </button>
+      <button class="btn btn-primary" onclick="getState()">Get State</button>
+      <button class="btn btn-primary" disabled>Update State</button>
+      <button class="btn btn-primary" onclick="getConfig()">Get Config</button>
+      <button class="btn btn-primary" disabled>Update Config</button>
+      <form class="row row-cols-lg-auto gx-2 my-2" onsubmit="setMode(event)">
+        <div class="col-12">
+          <select class="form-select" name="mode">
+            <option selected disabled value="">Choose mode</option>
+            <option value="0">HAMP</option>
+            <option value="1">HSSP</option>
+            <option value="2">HDSP</option>
+            <option value="3">MAINTENANCE</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Set mode</button>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="getMode()">
+            Get mode
+          </button>
+        </div>
+      </form>
+      <button class="btn btn-primary" onclick="syncClientServerTime()">
+        Sync Client-Server time
+      </button>
+      <button class="btn btn-primary" onclick="syncHandyServerTime()">
+        Sync Handy-Server time
+      </button>
+      <button class="btn btn-primary" onclick="sync()">Sync both</button>
+
+      <h6 class="mt-2">HSTP</h6>
+      <form class="row row-cols-lg-auto gx-2 my-2" onsubmit="setOffset(event)">
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="offset"
+            placeholder="Offset"
+          />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Set Offset</button>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="getOffset()">
+            Get Offset
+          </button>
+        </div>
+      </form>
+      <button class="btn btn-primary" onclick="getHandyRtd()">
+        Get Handy RTD
+      </button>
+
+      <h6 class="mt-2">Slide</h6>
+      <form
+        class="row row-cols-lg-auto gx-2 my-2 align-items-center"
+        onsubmit="setStrokeZone(event)"
+      >
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="min"
+            placeholder="Min"
+          />
+        </div>
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="max"
+            placeholder="Max"
+          />
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="fixed"
+              id="slideFixed"
+            />
+            <label class="form-check-label" for="slideFixed">Fixed</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Set Stroke Zone</button>
+        </div>
+        <div class="col-12">
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="getStrokeZone()"
+          >
+            Get Stroke Zone
+          </button>
+        </div>
+      </form>
+      <button class="btn btn-primary" onclick="getAbsolutePosition()">
+        Get Absolute Position
+      </button>
+
+      <h6 class="mt-2">HAMP</h6>
+      <button class="btn btn-primary" onclick="hampPlay()">HAMP start</button>
+      <button class="btn btn-primary" onclick="hampStop()">HAMP stop</button>
+      <form
+        class="row row-cols-lg-auto gx-2 my-2"
+        onsubmit="setHampVelocity(event)"
+      >
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="velocity"
+            placeholder="Velocity"
+          />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">
+            Set HAMP Velocity
+          </button>
+        </div>
+        <div class="col-12">
+          <button
+            type="button"
+            class="btn btn-primary"
+            onclick="getHampVelocity()"
+          >
+            Get HAMP Velocity
+          </button>
+        </div>
+      </form>
+
+      <h6 class="mt-2">HSSP</h6>
+      <button class="btn btn-primary" onclick="setScript()">Set Script</button>
+      <form class="my-2" onsubmit="setScriptFromData(event)">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="csv"
+          placeholder="Paste CSV here..."
+        ></textarea>
+        <button type="submit" class="btn btn-primary mt-2">
+          Set Script From Data
+        </button>
+      </form>
+      <button class="btn btn-primary" onclick="hsspPlay()">HSSP Play</button>
+      <button class="btn btn-primary" onclick="hsspStop()">HSSP Stop</button>
+      <form
+        class="row row-cols-lg-auto gx-2 my-2 align-items-center"
+        onsubmit="setHsspLoop(event)"
+      >
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="loop"
+              id="hsspLoop"
+            />
+            <label class="form-check-label" for="hsspLoop">Loop</label>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Set HSSP Loop</button>
+        </div>
+        <div class="col-12">
+          <button type="button" class="btn btn-primary" onclick="getHsspLoop()">
+            Get HSSP Loop
+          </button>
+        </div>
+      </form>
+
+      <h6 class="mt-2">HDSP</h6>
+      <form
+        class="row row-cols-lg-auto gx-2 my-2 align-items-center"
+        onsubmit="hdsp(event)"
+      >
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="position"
+            placeholder="Position"
+          />
+        </div>
+        <div class="col-12">
+          <input
+            type="number"
+            class="form-control"
+            name="speed"
+            placeholder="Speed"
+          />
+        </div>
+        <div class="col-12">
+          <select class="form-select" name="positionType">
+            <option selected disabled value="">Position Type</option>
+            <option value="absolute">Absolute</option>
+            <option value="percent">Percent</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <select class="form-select" name="speedType">
+            <option selected disabled value="">Speed type</option>
+            <option value="absolute">Absolute</option>
+            <option value="percent">Percent</option>
+            <option value="time">Time</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="stopOnTarget"
+              id="hdspStopOnTarget"
+            />
+            <label class="form-check-label" for="hdspStopOnTarget">
+              Stop On Target
+            </label>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="immediateResponse"
+              id="hdspImmediateResponse"
+            />
+            <label class="form-check-label" for="hdspImmediateResponse">
+              Immediate Response
+            </label>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Apply</button>
+        </div>
+      </form>
+
+      <h6 class="mt-2">MAINTENANCE</h6>
+      <button class="btn btn-primary" onclick="restartHandy()">Restart</button>
+
+      <h5 class="mt-2">Static</h5>
+      <form onsubmit="uploadDataToServer(event)">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="csv"
+          placeholder="Paste CSV here..."
+        ></textarea>
+        <button type="submit" class="btn btn-primary my-2">
+          Upload Data To Server
+        </button>
+      </form>
+      <form onsubmit="isValidCSV(event)">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="csv"
+          placeholder="Paste CSV here..."
+        ></textarea>
+        <button type="submit" class="btn btn-primary my-2">
+          Is CSV valid?
+        </button>
+      </form>
+      <form onsubmit="convertDataToCSV(event)">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="script"
+          placeholder="Paste script here..."
+        ></textarea>
+        <button type="submit" class="btn btn-primary my-2">
+          Convert Data To CSV
+        </button>
+      </form>
+      <button class="btn btn-primary" onclick="getEstimatedServerTime()">
+        Get Estimated Server Time
+      </button>
+
+      <div class="embed-responsive embed-responsive-16by9 mt-2">
+        <video
+          src="https://playground.handyfeeling.com/assets/sync_video_2021.mp4"
+          type="video/mp4"
+          class="embed-responsive-item w-100"
+          controls
+          muted
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <div id="output-state" class="mt-2"></div>
+      <div id="output-change" class="mt-2"></div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Local Development-->
+    <script src="../dist/handy.umd.js"></script>
+    <!-- Production -->
+    <!-- <script crossorigin src="https://unpkg.com/@ohdoki/handy-sdk"></script> -->
+
+    <script>
+      const keyInput = document.getElementById('connection-key');
+      const handyMessage = document.getElementById('handy-message-output');
+      const video = document.querySelector('video');
+
+      const handy = Handy.init();
+
+      handy.on('state', outputState);
+      handy.setVideoPlayer(video);
+
+      handy.getStoredKey().then(storedKey => {
+        if (!storedKey) return;
+        console.log('Stored key found connecting automaticly. Key:', storedKey);
+        keyInput.value = storedKey;
+        connect();
+      });
+
+      function connect() {
+        handy.connect(keyInput.value.trim()).then(response => {
+          console.log('Handy connected:', response);
+          if (response === Handy.ConnectResult.CONNECTED) {
+            handyMessage.innerHTML = 'Machine connected';
+          } else {
+            handyMessage.innerHTML = 'Machine not connected';
+          }
+        });
+      }
+
+      function disconnect() {
+        handy
+          .disconnect()
+          .then(() => (handyMessage.innerHTML = 'Disconnected'));
+      }
+
+      function getStoredKey() {
+        handy.getStoredKey().then(console.log);
+      }
+
+      function getState() {
+        console.log(handy.getState());
+      }
+
+      function getConfig() {
+        console.log(handy.getConfig());
+      }
+
+      function setMode(event) {
+        event.preventDefault();
+        const mode = Number(event.target.elements.mode.value);
+        if (isNaN(mode)) return alert('Select mode');
+        handy.setMode(mode).then(console.log);
+      }
+
+      function getMode() {
+        handy.getMode().then(console.log);
+      }
+
+      function syncClientServerTime() {
+        handy.syncClientServerTime();
+      }
+
+      function syncHandyServerTime() {
+        handy.syncHandyServerTime().then(console.log);
+      }
+
+      function sync() {
+        handy.sync();
+      }
+
+      function getHandyRtd() {
+        handy.getHandyRtd().then(console.log);
+      }
+
+      function setOffset(event) {
+        event.preventDefault();
+        const offset = Number(event.target.elements.offset.value);
+        if (isNaN(offset)) return alert('Offset is required');
+        handy.setOffset(offset).then(console.log);
+      }
+
+      function getOffset() {
+        handy.getOffset().then(console.log);
+      }
+
+      function setStrokeZone(event) {
+        event.preventDefault();
+        const elements = event.target.elements;
+        const numberMin = Number(elements.min.value);
+        const numberMax = Number(elements.max.value);
+        const min = isNaN(numberMin) ? undefined : numberMin;
+        const max = isNaN(numberMax) ? undefined : numberMax;
+        const fixed = elements.fixed.checked;
+
+        if (isNaN(min) && isNaN(max)) {
+          return alert('Min or max value is required');
+        }
+        if (min && max && fixed) {
+          return alert('Fixed is only available with either min or max');
+        }
+
+        handy.setStrokeZone({ min, max, fixed }).then(console.log);
+      }
+
+      function getStrokeZone() {
+        handy.getStrokeZone().then(console.log);
+      }
+
+      function getAbsolutePosition() {
+        handy.getAbsolutePosition().then(console.log);
+      }
+
+      function hampPlay() {
+        handy.hampPlay().then(console.log);
+      }
+
+      function hampStop() {
+        handy.hampStop().then(console.log);
+      }
+
+      function setHampVelocity(event) {
+        event.preventDefault();
+        const velocity = Number(event.target.elements.velocity.value);
+        if (isNaN(velocity)) return alert('Velocity is required');
+        handy.setHampVelocity(velocity).then(console.log);
+      }
+
+      function getHampVelocity() {
+        handy.getHampVelocity().then(console.log);
+      }
+
+      function setScript() {
+        handy
+          .setScript(
+            'https://playground.handyfeeling.com/assets/sync_video_2021.csv',
+          )
+          .then(console.log);
+      }
+
+      function setScriptFromData(event) {
+        event.preventDefault();
+        const csv = event.target.elements.csv;
+        handy.setScriptFromData(csv.value.trim()).then(console.log);
+      }
+
+      function hsspPlay() {
+        handy.hsspPlay().then(console.log);
+      }
+
+      function hsspStop() {
+        handy.hsspStop().then(console.log);
+      }
+
+      function setHsspLoop(event) {
+        event.preventDefault();
+        const loop = event.target.elements.loop.checked;
+        handy.setHsspLoop(loop).then(console.log);
+      }
+
+      function getHsspLoop() {
+        handy.getHsspLoop().then(console.log);
+      }
+
+      function hdsp(event) {
+        event.preventDefault();
+        const elements = event.target.elements;
+
+        const position = Number(elements.position.value);
+        if (isNaN(position)) return console.error('Position is required');
+
+        const speed = Number(elements.speed.value);
+        if (isNaN(speed)) return console.error('Speed is required');
+
+        const positionType = elements.positionType.value;
+        if (!positionType) return console.error('Select position type');
+
+        const speedType = elements.speedType.value;
+        if (!speedType) return console.error('Select speed type');
+
+        const stopOnTarget = elements.stopOnTarget.checked;
+
+        handy
+          .hdsp(position, speed, positionType, speedType, stopOnTarget)
+          .then(console.log);
+      }
+
+      function restartHandy() {
+        handy.restartHandy().then(console.log);
+      }
+
+      function uploadDataToServer(event) {
+        event.preventDefault();
+        const csv = event.target.elements.csv.value.trim();
+        Handy.uploadDataToServer(csv).then(console.log);
+      }
+
+      function isValidCSV(event) {
+        event.preventDefault();
+        const csv = event.target.elements.csv.value.trim();
+        console.log(Handy.isValidCSV(csv));
+      }
+
+      function convertDataToCSV(event) {
+        event.preventDefault();
+        try {
+          const script = event.target.elements.script;
+          const csv = Handy.convertDataToCSV(script.value);
+          script.value = csv;
+        } catch (error) {
+          console.error(error);
+          alert('Invalid script');
+        }
+      }
+
+      function getEstimatedServerTime() {
+        console.log(Handy.getEstimatedServerTime());
+      }
+
+      function outputState({ state, change }) {
+        const changeDiv = document.getElementById('output-change');
+        changeDiv.innerHTML =
+          '<h4>Latest state change</h4><pre>' +
+          JSON.stringify(change, null, 4) +
+          '</pre>';
+
+        const stateDiv = document.getElementById('output-state');
+        let html = '<h4>Handy state</h4><ul>';
+        for (const key in state) {
+          const element = state[key];
+          if (typeof element == 'object') {
+            html += `<li><b>${key}:</b><ul>`;
+            for (const keyNested in element) {
+              html += `<li><b>${keyNested}:</b> ${element[keyNested]}</li>`;
+            }
+            html += '</ul></li>';
+          } else {
+            html += `<li><b>${key}:</b> ${element}</li>`;
+          }
+        }
+        html += '</ul>';
+        stateDiv.innerHTML = html;
+      }
+    </script>
+  </body>
+</html>

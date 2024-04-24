@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+    />
+    <title>Handy SDK v2 universal UI example</title>
+</head>
+
+<body>
+<div class="container">
+    <h1>Universal UI example</h1>
+
+    <div id="uui"></div>
+    <!--    <input type="file" id="file-input"/>-->
+    <!--    <h3>Contents of the file:</h3>-->
+    <!--    <pre id="file-content"></pre>-->
+
+    <div class="embed-responsive embed-responsive-16by9 mt-2">
+        <video
+                src="https://playground.handyfeeling.com/assets/sync_video_2021.mp4"
+                type="video/mp4"
+                class="embed-responsive-item w-100"
+                controls
+                muted
+        >
+            Your browser does not support the video tag.
+        </video>
+        <div style="position: relative; padding-top: 56.25%;">
+            <iframe src="https://iframe.mediadelivery.net/embed/63077/b7010694-042b-46a0-a647-15fe1f73520f?autoplay=false"
+                    loading="lazy" style="border: none; position: absolute; top: 0; height: 100%; width: 100%;"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+                    allowfullscreen="true"></iframe>
+        </div>
+    </div>
+</div>
+
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"
+></script>
+<!-- Local Development-->
+<script src="../dist/handy.umd.js"></script>
+<!-- Production -->
+<!-- <script crossorigin src="https://unpkg.com/@ohdoki/handy-sdk"></script> -->
+
+<script type="text/javascript" src="//assets.mediadelivery.net/playerjs/player-0.1.0.min.js"></script>
+
+<script>
+
+    // function readSingleFile(e) {
+    //     var file = e.target.files[0];
+    //     if (!file) {
+    //         return;
+    //     }
+    //     var reader = new FileReader();
+    //     reader.onload = function (e) {
+    //         var contents = e.target.result;
+    //         displayContents(contents);
+    //     };
+    //     reader.readAsText(file);
+    // }
+    //
+    //
+    // document.getElementById('file-input')
+    //     .addEventListener('change', readSingleFile, false);
+
+    const player = new playerjs.Player(document.querySelector('iframe'));
+    // console.log(player)
+    // player.on('ready', () => {
+    //     player.on('play', () => {
+    //         console.log('play');
+    //     });
+    //
+    //     player.on('pause', () => {
+    //         console.log('pause');
+    //     });
+    //
+    //     player.on('ended', () => {
+    //         console.log('ended');
+    //     });
+    //
+    //     player.on('timeupdate', () => {
+    //         console.log(player.getCurrentTime());
+    //     });
+    //
+    //     player.on('progress', () => {
+    //         console.log('progress');
+    //     });
+    //
+    //     player.on('error', () => {
+    //         console.log('error');
+    //     });
+    //
+    //     player.getDuration(duration => console.log(duration));
+    //
+    //     if (player.supports('method', 'mute')) {
+    //         player.mute();
+    //     }
+    //
+    //     player.play();
+    // });
+
+    const video = document.querySelector('video');
+    const handy = Handy.init();
+
+    handy.attachUUI('uui');
+
+    // function displayContents(contents) {
+    //     var element = document.getElementById('file-content');
+    //     element.textContent = contents;
+    //     handy.setScriptFromData(
+    //         contents
+    //     )
+    //         .then(console.log);
+    // }
+
+    // handy.#playingListener = async () => {
+    //     await handy.hsspPlay(videoPlayer.currentTime * 1000);
+    //     handy.playingTimer = setTimeout(() => {
+    //         handy.hsspPlay(videoPlayer.currentTime * 1000);
+    //     }, handy.#config.videoPlayerDelayForSecondPlay);
+    // };
+    //
+    // this.#pauseListener = () => {
+    //     if (this.getState().hssp?.state === HSSPState.PLAYING) {
+    //         this.hsspStop();
+    //     }
+    // };
+    //
+    // videoPlayer.addEventListener('playing', this.#playingListener);
+    // videoPlayer.addEventListener('pause', this.#pauseListener);
+
+
+    handy.setVideoPlayer(player);
+
+    handy.on('connect', () => {
+        handy
+            .setScript(
+                'https://playground.handyfeeling.com/assets/sync_video_2021.csv',
+            )
+            .then(console.log);
+    });
+
+    handy.on('disconnect', () => player.pause());
+</script>
+</body>
+</html>

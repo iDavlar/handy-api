@@ -1,0 +1,54 @@
+{
+  "name": "The Handy - JOIGang 2",
+  "description": "Integrate video from https://joigang.com with The Handy API",
+  "version": "1.0",
+  "manifest_version": 3,
+  "icons": {},
+  "action": {
+    "default_popup": "src/extension/html/popup.html",
+    "default_title": "The Handy - JOIGang"
+  },
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "webRequest"
+  ],
+  "background": {},
+  "content_scripts": [
+    {
+      "matches": [
+        "https://joigang.com/*"
+      ],
+      "js": [
+        "dist/handy.cjs.js",
+        "dist/handy.esm.js",
+        "dist/handy.umd.js",
+        "src/extension/javaScript/player-0.1.0.min.js",
+        "src/extension/javaScript/content.mjs"
+
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "matches": [
+        "https://joigang.com/*"
+      ],
+      "resources": [
+        "dist/handy.cjs.js",
+        "dist/handy.esm.js",
+        "dist/handy.umd.js",
+        "src/extension/javaScript/player-0.1.0.min.js"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "script-src": [
+      "self"
+    ],
+    "object-src": "self",
+    "script-src-elem": [
+      "self"
+    ]
+  }
+}

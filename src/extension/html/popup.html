@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="En_en">
+<head>
+    <title>Image Grabber</title>
+    <link rel="stylesheet" type="text/css" href="../css/popup.css"/>
+</head>
+<body>
+<h1>Image Grabber</h1>
+<button id="grabBtn">GRAB NOW</button>
+<div id="handy_ui"></div>
+<script src="/dist/handy.umd.js"></script>
+<!--<script type="module" src="../../handy.ts"></script>-->
+<script type="module" src="../javaScript/popup.mjs"></script>
+<!--<script>
+    // const video = document.querySelector('video');
+    const handy = Handy.init();
+
+    handy.attachUUI('handy_ui');
+    // handy.setVideoPlayer(video);
+
+    handy.on('connect', () => {
+        handy
+            .setScript(
+                'https://playground.handyfeeling.com/assets/sync_video_2021.csv',
+            )
+            .then(console.log);
+    });
+
+    // handy.on('disconnect', () => video.pause());
+</script>-->
+</body>
+</html>

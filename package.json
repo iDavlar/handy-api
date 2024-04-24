@@ -1,0 +1,47 @@
+{
+  "name": "@ohdoki/handy-sdk",
+  "version": "2.3.4",
+  "description": "JavaScript library and a collection of examples to get you started with developing apps for the Handy",
+  "author": "ohdoki",
+  "license": "MIT",
+  "main": "dist/handy.cjs.js",
+  "module": "dist/handy.esm.js",
+  "browser": "dist/handy.umd.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "format": "prettier --check ",
+    "format:fix": "prettier --write ",
+    "lint": "tsc && eslint src --max-warnings=0",
+    "lint:fix": "npm run lint -- --fix",
+    "importCore": "rm -rf src/_APICORE && openapi --exportSchemas true --input https://staging.handyfeeling.com/api/handy/v2/spec --output src/_APICORE --name HandyAPI --indent 2",
+    "prepare": "npm run build && husky install",
+    "prepublishOnly": "npm run lint && rm -rf dist && npm run build"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-replace": "^5.0.1",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.1",
+    "openapi-typescript-codegen": "^0.23.0",
+    "prettier": "^2.7.1",
+    "rollup": "^2.79.1",
+    "rollup-plugin-styles": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.55.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@bem-react/classname": "^1.5.12",
+    "mitt": "^3.0.0",
+    "preact": "^10.11.2"
+  }
+}
