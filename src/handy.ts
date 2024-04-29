@@ -46,7 +46,7 @@ let isSyncingClientServerTime = false;
 export class Handy {
     API: ReturnType<typeof APIWrapper>;
     playingTimer?: NodeJS.Timeout;
-    // videoPlayer?: HTMLVideoElement;
+    // CHANGED
     videoPlayer?: any;
 
     #state: HandyState;
@@ -238,28 +238,7 @@ export class Handy {
 
         if (!videoPlayer) return;
 
-        // if (!(videoPlayer instanceof HTMLVideoElement)) {
-        //   throw new HandyError(
-        //     'Provided element is not instance of HTMLVideoElement',
-        //   );
-        // }
-
-        // this.#playingListener = async () => {
-        //   await this.hsspPlay(videoPlayer.currentTime * 1000);
-        //   this.playingTimer = setTimeout(() => {
-        //     this.hsspPlay(videoPlayer.currentTime * 1000);
-        //   }, this.#config.videoPlayerDelayForSecondPlay);
-        // };
-        //
-        // this.#pauseListener = () => {
-        //   if (this.getState().hssp?.state === HSSPState.PLAYING) {
-        //     this.hsspStop();
-        //   }
-        // };
-        //
-        // videoPlayer.addEventListener('playing', this.#playingListener);
-        // videoPlayer.addEventListener('pause', this.#pauseListener);
-
+        // CHANGED
         if ((videoPlayer instanceof HTMLVideoElement)) {
 
             this.#playingListener = async () => {
@@ -282,14 +261,16 @@ export class Handy {
         } else {
 
             this.#playingListener = async () => {
-                videoPlayer.getCurrentTime((currentTime: number) => async () => {
-                    console.log(currentTime)
-                    await this.hsspPlay(currentTime * 1000);
-                    this.playingTimer = setTimeout(() => {
-                        this.hsspPlay(currentTime * 1000);
-                    }, this.#config.videoPlayerDelayForSecondPlay);
-                });
-
+                videoPlayer.getCurrentTime((currentTime: number) => {
+                    this.hsspPlay(currentTime * 1000)
+                        .then(() => {
+                            this.playingTimer = setTimeout(() => {
+                                videoPlayer.getCurrentTime((currentTime: number) => {
+                                    this.hsspPlay(currentTime * 1000);
+                                })
+                            }, this.#config.videoPlayerDelayForSecondPlay)
+                        });
+                })
             };
 
             this.#pauseListener = () => {

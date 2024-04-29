@@ -52,95 +52,40 @@
 <!-- <script crossorigin src="https://unpkg.com/@ohdoki/handy-sdk"></script> -->
 
 <script type="text/javascript" src="//assets.mediadelivery.net/playerjs/player-0.1.0.min.js"></script>
+<!--<script type="text/javascript" src="//cdn.embed.ly/player-0.1.0.min.js"></script>-->
 
 <script>
-
-    function readSingleFile(e) {
-        var file = e.target.files[0];
-        if (!file) {
-            return;
-        }
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var contents = e.target.result;
-            displayContents(contents);
-        };
-        reader.readAsText(file);
-    }
-
-
-    document.getElementById('file-input')
-        .addEventListener('change', readSingleFile, false);
-
-    const player = new playerjs.Player(document.querySelector('iframe'));
-    // console.log(player)
-    // player.on('ready', () => {
-    //     player.on('play', () => {
-    //         console.log('play');
-    //     });
-    //
-    //     player.on('pause', () => {
-    //         console.log('pause');
-    //     });
-    //
-    //     player.on('ended', () => {
-    //         console.log('ended');
-    //     });
-    //
-    //     player.on('timeupdate', () => {
-    //         console.log(player.getCurrentTime());
-    //     });
-    //
-    //     player.on('progress', () => {
-    //         console.log('progress');
-    //     });
-    //
-    //     player.on('error', () => {
-    //         console.log('error');
-    //     });
-    //
-    //     player.getDuration(duration => console.log(duration));
-    //
-    //     if (player.supports('method', 'mute')) {
-    //         player.mute();
-    //     }
-    //
-    //     player.play();
-    // });
 
     const video = document.querySelector('video');
     const handy = Handy.init();
 
+    const player = new playerjs.Player(document.querySelector('iframe'));
+    console.log(player);
+
     handy.attachUUI('uui');
 
-    function displayContents(contents) {
-        var element = document.getElementById('file-content');
-        element.textContent = contents;
-        console.log(element.textContent);
-        handy.setScriptFromData(
-            contents
-        )
-            .then(console.log);
-    }
+    player.on('ready', () => {
 
-    // handy.#playingListener = async () => {
-    //     await handy.hsspPlay(videoPlayer.currentTime * 1000);
-    //     handy.playingTimer = setTimeout(() => {
-    //         handy.hsspPlay(videoPlayer.currentTime * 1000);
-    //     }, handy.#config.videoPlayerDelayForSecondPlay);
-    // };
-    //
-    // this.#pauseListener = () => {
-    //     if (this.getState().hssp?.state === HSSPState.PLAYING) {
-    //         this.hsspStop();
-    //     }
-    // };
-    //
-    // videoPlayer.addEventListener('playing', this.#playingListener);
-    // videoPlayer.addEventListener('pause', this.#pauseListener);
+        handy.setVideoPlayer(player);
+        handy.on('disconnect', () => player.pause());
 
+        // player.on('play', () => {
+        //     console.log('play');
+        // });
 
-    handy.setVideoPlayer(player);
+        // player.on('timeupdate', () => {
+        //     console.log(
+        //         player.getCurrentTime(
+        //             (currentTime) => console.log("current video time: ", currentTime)
+        //         )
+        //     );
+        // });
+
+        // player.on('pause', () => {
+        //     console.log('pause');
+        // });
+
+    });
 
     handy.on('connect', () => {
         // handy
@@ -158,7 +103,32 @@
         }
     });
 
-    handy.on('disconnect', () => player.pause());
+    function readSingleFile(e) {
+        var file = e.target.files[0];
+        if (!file) {
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var contents = e.target.result;
+            displayContents(contents);
+        };
+        reader.readAsText(file);
+    }
+
+    function displayContents(contents) {
+        var element = document.getElementById('file-content');
+        element.textContent = contents;
+        console.log(element.textContent);
+        handy.setScriptFromData(
+            contents
+        )
+            .then(console.log);
+    }
+
+    document.getElementById('file-input')
+        .addEventListener('change', readSingleFile, false);
+
 </script>
 </body>
 </html>
